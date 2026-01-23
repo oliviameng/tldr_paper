@@ -1,0 +1,5 @@
+{
+  "name": "TLDR Paper — PM Edition",
+  "description": "An application that decodes any AI research paper into a structured summary for product managers, and tracks the top 5 trending papers of the week.",
+  "requestFramePermissions": []
+}

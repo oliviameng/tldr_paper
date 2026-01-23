@@ -1,5 +1,6 @@
 
-# 🧭 TLDR Paper — PM Edition
+# 🧭 TLDR Paper — PM Edition by Olivia Meng
+follow me on substack https://substack.com/@oliviaxmeng?
 
 **Decode any AI research paper into what a Product Manager can actually use.**
 

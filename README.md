@@ -1,57 +1,44 @@
+# TLDR Paper
 
-# 🧭 TLDR Paper — PM Edition by Olivia Meng
-follow me on substack https://substack.com/@oliviaxmeng?
+**Read an AI research paper the way a product manager needs to: what changed, what it means for users, what it costs to ship.**
 
-**Decode any AI research paper into what a Product Manager can actually use.**
+Most paper summaries are written for other researchers. TLDR Paper reads the same PDF and answers the questions a PM actually has: what is the leap, how would I explain it to my team, where does it change the product, and what infrastructure does it assume.
 
-TLDR Paper is a specialized tool designed for Product Managers to bridge the gap between complex AI research and practical product strategy. It distills dense academic papers into structured, actionable insights focusing on user experience, metrics, and infrastructure.
+## What it does
 
-## ✨ Features
+- **Ingest from anywhere.** Paste an arXiv URL, upload a PDF, or paste raw text.
+- **PM-centric summary.** Every paper comes back in the same structure: The Leap, a plain-language metaphor for the technical idea, product implications, and real-world applications.
+- **Trend tracker.** Pulls the week's top trending AI papers with search grounding and summarizes them in the same format.
+- **Ask the paper.** Follow-up chat grounded in the document you loaded.
+- **Editable output.** Summaries render as editable text you can copy as rich text or Markdown into a doc or a Slack thread.
+- **Your logo.** Upload one to brand the reports you share.
 
-- **Multi-Source Ingestion**: Input papers via URL (e.g., arXiv), PDF upload, or direct text paste.
-- **PM-Centric Summarization**: Generates summaries covering "The Leap", metaphors for technical logic, product implications, and real-world applications.
-- **Trend Tracker**: Discovers and summarizes the top 5 trending AI research papers of the week using Google Search grounding.
-- **Interactive Chat**: Ask follow-up questions directly to the paper using an AI-powered research assistant.
-- **Editable Reports**: Summaries are generated in an editable format, allowing you to refine and copy them as rich text or Markdown.
-- **Custom Branding**: Upload your own logo to personalize the experience.
+## Run it
 
-## 🚀 Getting Started
+You need Node.js 18+ and a Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
 
-### Prerequisites
+```bash
+git clone https://github.com/oliviameng/tldr_paper.git
+cd tldr_paper
+npm install
+cp .env.example .env   # add your key to API_KEY
+npm run dev
+```
 
-- Node.js (v18 or higher)
-- A Gemini API Key from [Google AI Studio](https://aistudio.google.com/app/apikey)
+## Stack
 
-### Installation
+React 19, Tailwind CSS, Google Gemini API (Gemini 3 Pro and Flash), PDF.js, CORS proxy fallback for URL fetching.
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/tldr-paper.git
-   cd tldr-paper
-   ```
+## Why this exists
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+Paper reading is a PM skill that almost no PM has time to practice. The bottleneck is not access to research, it is translation: turning a method section into a product decision. This tool encodes the translation step so it happens every time, in the same shape, instead of only when someone has a free afternoon.
 
-3. Set up environment variables:
-   - Copy `.env.example` to `.env`.
-   - Add your Gemini API key to the `API_KEY` variable.
+More on how I think about AI deployment and product work at [Soft Intelligence on Substack](https://substack.com/@oliviaxmeng).
 
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
+## License
 
-## 🛠️ Tech Stack
+MIT. See [LICENSE](LICENSE).
 
-- **Framework**: React 19
-- **Styling**: Tailwind CSS
-- **AI Engine**: Google Gemini API (Gemini 3 Pro & Flash)
-- **PDF Processing**: PDF.js
-- **Proxy**: Resilient fetching via CORS proxies for URL scraping.
+---
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+*Personal project. Built on my own time with my own tools; not affiliated with or endorsed by any employer.*

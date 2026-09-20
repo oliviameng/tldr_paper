@@ -15,19 +15,21 @@ Most paper summaries are written for other researchers. TLDR Paper reads the sam
 
 ## Run it
 
-You need Node.js 18+ and a Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+You need Node.js 20.19+ (or 22.12+) and a Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey). The key is read only by the Node server and is never included in the browser bundle.
 
 ```bash
 git clone https://github.com/oliviameng/tldr_paper.git
 cd tldr_paper
 npm install
-cp .env.example .env   # add your key to API_KEY
+cp .env.example .env   # add your key to GEMINI_API_KEY
 npm run dev
 ```
 
+The web client runs on `http://localhost:3000` and proxies API requests to the server on port `3001`. For a production-style local run, use `npm run build && npm start` and open the server port. The server binds to `127.0.0.1` by default. For public deployment, provide authentication and persistent distributed rate limiting at an HTTPS gateway before setting `HOST=0.0.0.0`; the built-in per-IP limiter is only a local safeguard against abuse.
+
 ## Stack
 
-React 19, Tailwind CSS, Google Gemini API (Gemini 3 Pro and Flash), PDF.js, CORS proxy fallback for URL fetching.
+React 19, Tailwind CSS, Node/Express, Google Gemini API (Gemini 3 Pro and Flash), PDF.js, CORS proxy fallback for URL fetching.
 
 ## Why this exists
 

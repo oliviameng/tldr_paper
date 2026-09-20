@@ -1,12 +1,9 @@
 
 import React, { useState, useEffect, useRef, FormEvent } from 'react';
-import { GoogleGenAI, Chat } from '@google/genai';
 import { ChatIcon, CloseIcon, SendIcon, BotIcon, UserIcon, LoadingSpinner } from './icons';
+import { askPaper, type ChatMessage } from '../services/geminiService';
 
-interface Message {
-  role: 'user' | 'model';
-  text: string;
-}
+type Message = ChatMessage;
 
 interface ChatbotProps {
   paperText: string;
@@ -19,7 +16,6 @@ const Chatbot: React.FC<ChatbotProps> = ({ paperText }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const chatRef = useRef<Chat | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -30,74 +26,36 @@ const Chatbot: React.FC<ChatbotProps> = ({ paperText }) => {
   
   useEffect(() => {
     if (paperText) {
-      try {
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
-        const newChat = ai.chats.create({
-            model: 'gemini-3-flash-preview',
-            config: {
-                systemInstruction: `You are a helpful research assistant. The user has just summarized a research paper and wants to ask questions about it. Answer the user's questions concisely based *only* on the provided paper text. If the answer is not in the text, say so.`,
-            },
-        });
-        chatRef.current = newChat;
-        setMessages([
-          { role: 'model', text: 'I have read the paper. What would you like to know?' }
-        ]);
-        setError(null);
-      } catch (e) {
-        console.error("Failed to initialize chat:", e);
-        setError("Could not start chat session.");
-      }
+      setMessages([
+        { role: 'model', text: 'I have read the paper. What would you like to know?' }
+      ]);
+      setError(null);
     } else {
-        chatRef.current = null;
-        setMessages([]);
+      setMessages([]);
     }
   }, [paperText]);
 
   const handleSendMessage = async (e: FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading || !chatRef.current) return;
+    if (!input.trim() || isLoading) return;
 
-    const userMessage: Message = { role: 'user', text: input };
+    const question = input.trim();
+    const userMessage: Message = { role: 'user', text: question };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
     setError(null);
 
     try {
-      const chat = chatRef.current;
-      const resultStream = await chat.sendMessageStream({ message: input });
-
-      let fullResponse = '';
-      let isFirstChunk = true;
-
-      for await (const chunk of resultStream) {
-        if (isFirstChunk) {
-          setIsLoading(false);
-          setMessages(prev => [...prev, { role: 'model', text: '' }]);
-          isFirstChunk = false;
-        }
-        
-        fullResponse += chunk.text;
-
-        setMessages(prev => {
-            const newMessages = [...prev];
-            if (newMessages.length > 0 && newMessages[newMessages.length - 1].role === 'model') {
-                 newMessages[newMessages.length - 1].text = fullResponse.trim();
-            }
-            return newMessages;
-        });
-      }
-
-      if (isFirstChunk) {
-        setIsLoading(false);
-      }
-
+      const answer = await askPaper(paperText, messages, question);
+      setMessages(prev => [...prev, { role: 'model', text: answer }]);
     } catch (e) {
-      setIsLoading(false);
       console.error("Error sending message:", e);
       const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
       setError(`Failed to get response: ${errorMessage}`);
       setMessages(prev => [...prev, { role: 'model', text: 'Sorry, I ran into a problem. Please try again.' }]);
+    } finally {
+      setIsLoading(false);
     }
   };
   
